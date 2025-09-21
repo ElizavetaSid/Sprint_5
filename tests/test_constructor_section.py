@@ -3,36 +3,37 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-
-@pytest.fixture(scope="function")
-def driver():
-    driver = webdriver.Chrome()
-    driver.get("https://stellarburgers.nomoreparties.site/")
-    yield driver
-    driver.quit()
+from tests.locators import *
 
 class TestStellarBurgersConstructor:
     
-    def test_constructor_section(self, driver):
-        wait = WebDriverWait(driver, 10) 
-        
-        buns_section = wait.until(EC.visibility_of_element_located((By.XPATH, "//span[text()='Булки']/..")))
-        sauces_section = wait.until(EC.visibility_of_element_located((By.XPATH, "//span[text()='Соусы']/..")))
-        fillings_section = wait.until(EC.visibility_of_element_located((By.XPATH, "//span[text()='Начинки']/..")))
-        
-        assert "tab_tab_type_current__2BEPc" in buns_section.get_attribute("class")
-        
-        sauces_section.click()
-        wait.until(EC.visibility_of_element_located((By.XPATH, "//div[contains(@class, 'tab_tab_type_current__2BEPc')]//span[text()='Соусы']")))
-        assert "tab_tab_type_current__2BEPc" in sauces_section.get_attribute("class")
-        assert "tab_tab_type_current__2BEPc" not in buns_section.get_attribute("class")
-        
-        fillings_section.click()
-        wait.until(EC.visibility_of_element_located((By.XPATH, "//div[contains(@class, 'tab_tab_type_current__2BEPc')]//span[text()='Начинки']")))
-        assert "tab_tab_type_current__2BEPc" in fillings_section.get_attribute("class")
-        assert "tab_tab_type_current__2BEPc" not in sauces_section.get_attribute("class")
+    def test_switch_to_sauces(self, driver):
+        wait = WebDriverWait(driver, 10)
+
+        sauces_tab = wait.until(EC.visibility_of_element_located((Locators.SAUCES_SECTION)))
+        driver.find_element(*Locators.SAUCES_SECTION).click()
     
-        buns_section.click()
-        wait.until(EC.visibility_of_element_located((By.XPATH, "//div[contains(@class, 'tab_tab_type_current__2BEPc')]//span[text()='Булки']")))
-        assert "tab_tab_type_current__2BEPc" in buns_section.get_attribute("class")
-        assert "tab_tab_type_current__2BEPc" not in fillings_section.get_attribute("class")
+        assert "tab_tab_type_current__2BEPc" in sauces_tab.get_attribute("class")
+    
+
+    def test_switch_to_toppings(self, driver):
+        wait = WebDriverWait(driver, 10)
+
+        toppings_tab = wait.until(EC.visibility_of_element_located((Locators.FILLINGS_SECTION)))
+        toppings_tab.click()
+    
+        assert "tab_tab_type_current__2BEPc" in toppings_tab.get_attribute("class")
+        assert wait.until(EC.visibility_of_element_located((Locators.FILLINGS_SECTION)))
+
+    def test_switch_to_buns(self, driver):
+        wait = WebDriverWait(driver, 10)
+
+        sauces_tab = wait.until(EC.visibility_of_element_located((Locators.SAUCES_SECTION)))
+        sauces_tab.click()
+    
+        buns_tab = wait.until(EC.visibility_of_element_located((Locators.BUNS_SECTION)))
+        buns_tab.click()
+    
+    
+        assert "tab_tab_type_current__2BEPc" in buns_tab.get_attribute("class")
+        assert wait.until(EC.visibility_of_element_located((Locators.BUNS_SECTION)))

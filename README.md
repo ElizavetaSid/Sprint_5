@@ -1,5 +1,4 @@
-# Sprint_5
-Автотесты для Stellar Burgers
+# Sprint_5Автотесты для Stellar Burgers
 Что проверяют тесты:
 Регистрация 
 test_registration.py 
@@ -38,4 +37,7 @@ test_log_out_account.py
 
 Раздел «Конструктор»: 
 test_constructor_section.py
-1. Переход между разделами конструктора test_constructor_section
+1. Переход в соусы test_switch_to_sauces
+2. Переход в начинки test_switch_to_toppings
+3. Переход в булки test_switch_to_buns
+
